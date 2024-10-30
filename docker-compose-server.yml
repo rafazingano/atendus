@@ -36,4 +36,4 @@ services:
 
 networks:
     local_network:
-        driver: bridg
+        driver: bridge
