@@ -545,7 +545,7 @@ class CarSeeder extends Seeder
                 'year' => 2019,
                 'color' => 'Branco',
                 'vin' => 'JTMWFREV6JJ123456',
-                'license_plate' => 'JKL3456',
+                'license_plate' => 'JKL3455',
                 'mileage' => 40000,
                 'engine' => '2.5L',
                 'fuel_type' => 'Flex',
