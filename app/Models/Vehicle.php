@@ -4,20 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Car extends Model
+class Vehicle extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     /**
      * Os atributos que podem ser atribuídos em massa.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'account_id',
+        'user_id',
+        'type',
         'make',
         'model',
+        'condition',
         'year',
         'color',
         'vin',
@@ -31,12 +36,7 @@ class Car extends Model
         'drivetrain',
         'features',
         'price',
-        'purchase_date',
-        'purchase_price',
-        'sale_date',
-        'sale_price',
         'status',
-        'previous_owners',
         'description',
         'location',
     ];
@@ -50,9 +50,13 @@ class Car extends Model
         'year' => 'integer',
         'mileage' => 'integer',
         'price' => 'decimal:2',
-        'purchase_price' => 'decimal:2',
-        'sale_price' => 'decimal:2',
-        'purchase_date' => 'date',
-        'sale_date' => 'date',
     ];
+
+    /**
+     * Obtém a conta associada ao veículo.
+     */
+    public function account():BelongsTo
+    {
+        return $this->belongsTo(Account::class);
+    }
 }
