@@ -12,11 +12,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Cashier\Billable;
+use Laravel\Sanctum\HasApiTokens;
 use Ramsey\Uuid\Uuid;
 
 class Account extends Model implements HasCurrentTenantLabel, HasAvatar, HasName
 {
-    use HasFactory, SoftDeletes;
+    use HasApiTokens, HasFactory, SoftDeletes, Billable;
 
     protected $fillable = [
         'uuid',
@@ -34,17 +36,22 @@ class Account extends Model implements HasCurrentTenantLabel, HasAvatar, HasName
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url;
+        return $this->avatar_url?? '';
     }
 
     public function getFilamentName(): string
     {
-        return $this->name;
+        return $this->name?? '';
     }
 
     public function getCurrentTenantLabel(): string
     {
-        return $this->plan->name;
+        return $this->plan->name?? '';
+    }
+
+    public function chats(): HasMany
+    {
+        return $this->hasMany(Chat::class);
     }
 
     public function vehicles(): HasMany

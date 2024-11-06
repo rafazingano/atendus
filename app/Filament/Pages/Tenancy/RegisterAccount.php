@@ -3,6 +3,8 @@
 namespace App\Filament\Pages\Tenancy;
 
 use App\Models\Account;
+use App\Models\Plan;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Tenancy\RegisterTenant;
@@ -27,10 +29,23 @@ class RegisterAccount extends RegisterTenant
 
     protected function handleRegistration(array $data): Account
     {
-        $team = Account::create($data);
+        $data['name'] = auth()->user()->name;
 
-        $team->members()->attach(auth()->user());
+        $account = Account::create($data);
 
-        return $team;
+        $account->users()->attach(auth()->user());
+
+        /*$plan = Plan::find($data['plan_id']);
+
+        return $account
+            ->newSubscription($plan->stripe_type, $plan->stripe_price)
+            ->trialDays(15)
+            ->allowPromotionCodes()
+            ->checkout([
+                'success_url' => route('filament.admin.pages.subscription-success', ['tenant' => $account]),
+                'cancel_url' => route('filament.admin.pages.subscription-cancel', ['tenant' => $account]),
+            ]);*/
+
+        return $account;
     }
 }

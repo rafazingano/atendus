@@ -9,6 +9,7 @@ use App\Enums\VehicleBodyType;
 use App\Enums\VehicleCondition;
 use App\Enums\VehicleStatus;
 use App\Enums\VehicleType;
+use App\Filament\Imports\VehicleImporter;
 use App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource\RelationManagers;
 use App\Models\Vehicle;
@@ -182,6 +183,9 @@ class VehicleResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
+            ])
+            ->headerActions([
+                //Tables\Actions\ImportAction::make()->importer(VehicleImporter::class)
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([

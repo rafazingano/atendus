@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'n8n_chat_url' => env('N8N_CHAT_URL', 'http://n8n.localhost'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

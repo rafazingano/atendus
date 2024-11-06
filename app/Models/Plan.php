@@ -10,13 +10,15 @@ use Ramsey\Uuid\Uuid;
 class Plan extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     protected $fillable = [
         'uuid',
         'name',
         'slug',
         'price',
         'description',
+        'stripe_type',
+        'stripe_price',
     ];
 
     protected static function booted(): void

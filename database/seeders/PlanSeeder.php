@@ -15,33 +15,42 @@ class PlanSeeder extends Seeder
     {
         $plans = [
             [
-                'name' => 'Plano Básico',
-                'slug' => 'plano-basico',
+                'name' => 'Plano Básico Mensal',
+                'slug' => 'plano-basico-mensal',
                 'price' => 9900, // R$99,00
                 'description' => 'Ideal para iniciantes, com recursos limitados de criação de chatbots.',
+                'stripe_type' => 'plano-basico',
+                'stripe_price' => 'price_1QHF6wJhbkDaayMYhkrwNQZA',
             ],
             [
-                'name' => 'Plano Profissional',
-                'slug' => 'plano-profissional',
+                'name' => 'Plano Básico Anual',
+                'slug' => 'plano-basico-anual',
+                'price' => 99900, // R$999,00
+                'description' => 'Ideal para iniciantes, com recursos limitados de criação de chatbots.',
+                'stripe_type' => 'plano-basico',
+                'stripe_price' => 'price_1QHF7jJhbkDaayMYztqRjgH8',
+            ],
+            [
+                'name' => 'Plano Profissional Mensal',
+                'slug' => 'plano-profissional-mensal',
                 'price' => 29900, // R$299,00
                 'description' => 'Perfeito para empresas, com recursos avançados e suporte técnico.',
+                'stripe_type' => 'plano-profissional',
+                'stripe_price' => 'price_1QHFDHJhbkDaayMYT7nDXNhg',
             ],
             [
-                'name' => 'Plano Corporativo',
-                'slug' => 'plano-corporativo',
-                'price' => 59900, // R$599,00
-                'description' => 'Solução completa para grandes empresas, com suporte premium e integração customizada.',
+                'name' => 'Plano Profissional Anual',
+                'slug' => 'plano-profissional-anual',
+                'price' => 299900, // R$2.999,00
+                'description' => 'Perfeito para empresas, com recursos avançados e suporte técnico.',
+                'stripe_type' => 'plano-profissional',
+                'stripe_price' => 'price_1QHFDfJhbkDaayMYZTdLlRon',
             ],
         ];
 
         foreach ($plans as $plan) {
-            Plan::create([
-                'uuid' => Str::uuid(),
-                'name' => $plan['name'],
-                'slug' => $plan['slug'],
-                'price' => $plan['price'],
-                'description' => $plan['description'],
-            ]);
+            $plan['uuid'] = Str::uuid();
+            Plan::updateOrCreate(['slug' => $plan['slug']], $plan);
         }
     }
 }

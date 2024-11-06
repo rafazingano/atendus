@@ -18,11 +18,17 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->decimal('price', 10, 2);
             $table->text('description');
+            $table->string('stripe_type');
+            $table->string('stripe_price');
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('uuid');
             $table->index('slug');
+            $table->index('stripe_type');
+            $table->index('stripe_price');
+
+            $table->unique(['stripe_type', 'stripe_price']);
         });
     }
 
