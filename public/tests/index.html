@@ -142,11 +142,12 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Adicione o código JavaScript do chat no local desejado em seu HTML -->
+    <!-- Adicione o código JavaScript do chat antes da tag "</body>" -->
     <script>
         (function () {
-            const chatID = '2|1dyJCc3hC3eRxY7FjLjl7GG9cPpArmm2eWSa3sgc2d2502f6'; 
+            const chatID = '2|1dyJCc3hC3eRxY7FjLjl7GG9cPpArmm2eWSa3sgc2d2502f6';
             const chatURL = 'http://localhost';
+            const title = 'Atendimento - Chat com Miguelito';
 
             const script = document.createElement('script');
             script.src = chatURL + '/chatbot.js';
@@ -155,7 +156,7 @@
 
             script.onload = function () {
                 if (window.initializeChatBot) {
-                    window.initializeChatBot(chatID, chatURL); 
+                    window.initializeChatBot(chatID, chatURL, title);
                 }
             };
         })();

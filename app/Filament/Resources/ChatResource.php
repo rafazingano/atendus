@@ -132,20 +132,25 @@ class ChatResource extends Resource
                         })
                         ->modalContent(function ($record) {
                             $scriptCode = "
+<!-- Adicione o código JavaScript do chat antes da tag \"</body>\" -->
 <script>
     (function () {
-        const clientID = '" . $record->uuid . "'; 
+        const chatID = '" . $record->uuid . "'; 
+        const chatURL = '" . config('app.url') . "';
+
         const script = document.createElement('script');
-        script.src = '" . config('app.url') . "/chatbot.js';
+        script.src = chatURL + '/chatbot.js';
         script.async = true;
         document.head.appendChild(script);
+
         script.onload = function () {
             if (window.initializeChatBot) {
-                window.initializeChatBot(clientID); 
+                window.initializeChatBot(chatID, chatURL); 
             }
         };
     })();
-</script>";
+</script>
+                            ";
                             return view('filament.resources.chats.copy-code-modal', [
                                 'scriptCode' => $scriptCode,
                             ]);

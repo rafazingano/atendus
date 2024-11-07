@@ -1,11 +1,13 @@
 (function () {
     let chatToken;
     let chatURL;
+    let title;
 
     // Função para inicializar o chatbot com o ID do cliente e URL do endpoint
-    window.initializeChatBot = function (tokenChat, urlChat) {
+    window.initializeChatBot = function (tokenChat, urlChat, titleText) {
         chatToken = tokenChat;
         chatURL = urlChat;
+        title = titleText;
         createChatButton();
     };
 
@@ -68,22 +70,46 @@
         });
         document.body.appendChild(chatWindow);
 
+        // Adiciona o título no topo do chat
+        const titleBar = document.createElement('div');
+        titleBar.innerText = title;
+        Object.assign(titleBar.style, {
+            backgroundColor: '#007bff',
+            color: '#fff',
+            padding: '20px',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            borderTopLeftRadius: '8px',
+            borderTopRightRadius: '8px',
+        });
+        chatWindow.appendChild(titleBar);
+
         const closeButton = document.createElement('button');
         closeButton.innerText = '✖';
         Object.assign(closeButton.style, {
-            alignSelf: 'flex-end',
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
             background: 'none',
             border: 'none',
             fontSize: '20px',
             cursor: 'pointer',
-            margin: '5px',
-            color: '#666',
+            color: '#fff',
         });
         closeButton.addEventListener('click', () => {
+
+            // Pergunta se o usuário deseja manter o histórico ou não
+            const keepHistory = confirm("Deseja continuar essa conversa mais tarde? Clique em 'Cancelar' para finalizar o atendimento.");
+
+            if (!keepHistory) {
+                localStorage.removeItem('chatHistory'); // Apaga o histórico se o usuário desejar finalizar o atendimento
+            }
+
             chatWindow.remove();
             if (floatingButton) floatingButton.style.display = 'block';
         });
-        chatWindow.appendChild(closeButton);
+        titleBar.appendChild(closeButton);
+        //chatWindow.appendChild(closeButton);
 
         const messagesContainer = document.createElement('div');
         messagesContainer.style.flex = '1';
@@ -91,7 +117,9 @@
         messagesContainer.style.overflowY = 'auto';
         chatWindow.appendChild(messagesContainer);
 
-        loadMessages(messagesContainer);
+        // Carrega mensagens ou busca a mensagem inicial se o histórico estiver vazio
+        loadOrFetchInitialMessage(messagesContainer);
+        //loadMessages(messagesContainer);
 
         const inputContainer = document.createElement('div');
         inputContainer.style.display = 'flex';
@@ -123,6 +151,39 @@
         inputContainer.appendChild(sendButton);
 
         sendButton.addEventListener('click', () => sendMessage(input.value, messagesContainer, input));
+    }
+
+    // Função para carregar o histórico ou buscar a mensagem inicial
+    function loadOrFetchInitialMessage(messagesContainer) {
+        const chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+
+        if (chatHistory.length > 0) {
+            loadMessages(messagesContainer);
+        } else {
+            fetch(chatURL + '/api/chat/initial_message', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + chatToken,
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const initialMessage = document.createElement('div');
+                    initialMessage.innerHTML = data.initial_message || 'Bem-vindo ao nosso atendimento!';
+                    initialMessage.style.margin = '5px';
+                    initialMessage.style.padding = '8px';
+                    initialMessage.style.backgroundColor = '#e0e0e0';
+                    initialMessage.style.borderRadius = '5px';
+                    initialMessage.style.alignSelf = 'flex-start';
+                    messagesContainer.appendChild(initialMessage);
+
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar a mensagem inicial:', error);
+                });
+        }
     }
 
     // Função para enviar a mensagem ao endpoint
@@ -165,7 +226,7 @@
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                
+
                 saveMessage(data.reply, 'bot');
             })
             .catch(error => {

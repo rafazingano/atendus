@@ -8,6 +8,24 @@ use Illuminate\Support\Facades\Http;
 
 class ChatController extends Controller
 {
+
+    public function initialMessage(Request $request)
+    {
+        try {
+            $chat = Auth::user();
+
+            $data = [
+                'initial_message' => $chat->initial_message,
+            ];
+
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Falha ao tentar recuperar a mensagem inicial do chat'
+            ], $e->getCode());
+        }
+    }
+
     public function chat(Request $request)
     {
         $chat = Auth::user();

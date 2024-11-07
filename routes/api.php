@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')
     ->post('/chat', [ChatController::class, 'chat']);
 
+Route::middleware('auth:sanctum')
+    ->get('/chat/initial_message', [ChatController::class, 'initialMessage']);
+
+    
+
 /*
 
 Route::get('/user', function (Request $request) {
